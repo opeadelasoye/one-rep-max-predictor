@@ -1,1 +1,1 @@
-# one-rep-max-predictor
+Strength Predictor
