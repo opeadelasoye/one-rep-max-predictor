@@ -1,8 +1,8 @@
 import pandas as pd
 import pickle
-from sklearn.linear_model import LinearRegression
 from sklearn.feature_selection import SelectKBest, f_regression
-from sklearn.metrics import mean_squared_error, mean_absolute_error, root_mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, root_mean_squared_error
+from sklearn.ensemble import RandomForestRegressor
 
 
 predict_variable = 'BestSquatKg'  # BestSquatKg or BestDeadliftKg
@@ -56,10 +56,10 @@ features_scores.sort_values(by='Score', ascending=False, inplace=True)
 
 # print(features_scores)
 
-lin_reg = LinearRegression()
-lin_reg.fit(X_train, Y_train)
+rf_reg = RandomForestRegressor(random_state=100)
+rf_reg.fit(X_train, Y_train)
 
-Y_pred = lin_reg.predict(X_test)
+Y_pred = rf_reg.predict(X_test)
 
 mse = mean_squared_error(Y_test, Y_pred)
 mae = mean_absolute_error(Y_test, Y_pred)
@@ -71,16 +71,16 @@ print('Mean Absolute Error:', mae)
 print('Root Mean Squared Error:', rmse)
 print('R-squared:', r2)
 """
-with open('linear_regression_model.pkl', 'wb') as file:
-    pickle.dump(lin_reg, file)
+with open('random_forest_regression_model.pkl', 'wb') as file:
+    pickle.dump(rf_reg, file)
 
-with open('linear_regression_model.pkl', 'rb') as file:
-    lin_reg_loaded = pickle.load(file)
+with open('random_forest_regression_model.pkl', 'rb') as file:
+    rf_reg_loaded = pickle.load(file)
 
 new_data = pd.read_csv(participant_data)
 
 X_new = new_data[['Sex', 'Equipment', 'Age', 'BodyweightKg']]
-Y_pred_new = lin_reg_loaded.predict(X_new)
+Y_pred_new = rf_reg_loaded.predict(X_new)
 
 print(X_new)
 print(Y_pred_new)
